@@ -1,5 +1,7 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
+const db = require('./db/connection');
+const cTable = require('console.table');
 
 initializeProgram = function() {
     inquirer    
@@ -13,12 +15,22 @@ initializeProgram = function() {
             }
         ])
         .then(({directory}) => {
-            if(directory === 'View All Employees') {
-                console.log('APPLE');
-            }
+            printResults(directory);
         })
 }
 
+function printResults(directory) {
+    if(directory === 'View All Employees') {
+        const sql = `SELECT * FROM employees`
+        db.query(sql, (err, rows) => {
+            console.table(rows);
+        })
+    }
+}
 module.exports = initializeProgram;
 
+
+
+
 //NOTE: For demo video, add a shipping department and add the roles of warehouse laborer, and delivery driver.
+//npm dotenv
