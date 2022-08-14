@@ -8,6 +8,7 @@ VALUES
 
 INSERT INTO roles (title, salary, department)
 VALUES
+    ('Sales Lead', 65000, 1)
     ('Salesperson', 65000, 1),
     ('Secretary', 40000, 1),
     ('Accountant', 75000, 2),
@@ -21,20 +22,20 @@ VALUES
     ('Marketing Representative', 45000, 5),
     ('Data Analyst', 75000, 5);
 
-INSERT INTO employees (first_name, last_name, role, department)
+INSERT INTO employees (first_name, last_name, role)
 VALUES 
-    ('James', 'Fraser', 1, 1),
-    ('Jack', 'London', 2, 1),
-    ('Robert', 'Bruce', 3, 2),
-    ('Peter', 'Greenaway', 4, 3),
-    ('Derek', 'Jarman', 5, 3),
-    ('Paolo', 'Pasolini', 6, 3),
-    ('Heathcote', 'Williams', 7, 4),
-    ('Sandy', 'Powell', 8, 4),
-    ('Emil', 'Zola', 9, 4),
-    ('Sissy', 'Coalpits', 10, 5),
-    ('Antoinette', 'Capet', 11, 5),
-    ('Samuel', 'Delany', 12, 5);
+    ('James', 'Fraser', 1),
+    ('Jack', 'London', 2),
+    ('Robert', 'Bruce', 3),
+    ('Peter', 'Greenaway', 4),
+    ('Derek', 'Jarman', 5),
+    ('Paolo', 'Pasolini', 6),
+    ('Heathcote', 'Williams', 7),
+    ('Sandy', 'Powell', 8),
+    ('Emil', 'Zola', 9),
+    ('Sissy', 'Coalpits', 10),
+    ('Antoinette', 'Capet', 11),
+    ('Samuel', 'Delany', 12);
 
 
     

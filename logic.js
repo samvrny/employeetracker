@@ -3,6 +3,7 @@ const fs = require('fs');
 const db = require('./db/connection');
 const cTable = require('console.table');
 
+//calls the functions that print the options results
 function printResults(directory) {
     if(directory === 'View All Employees') {
         allEmployees(directory);
@@ -16,17 +17,22 @@ function printResults(directory) {
         addRole(directory);
     } else if(directory === 'Add Department') {
         addDepartment(directory);
+    } else if(directory === 'Update Employee Role') {
+        updateEmployeeRole(directory);
     }
 };
 
 //gets all employee information
 function allEmployees() {
-    const sql = `SELECT employees.*, roles.title
-                 AS role_id
+    const sql = `SELECT employees.*,
+                 roles.title AS role,
+                 roles.salary AS salary,
+                 departments.name AS department
                  FROM employees
-                 LEFT JOIN roles
-                 ON employees.role_id = roles.id`;
+                 LEFT JOIN roles ON employees.role = roles.id
+                 LEFT JOIN departments ON roles.department = departments.id`;
         db.query(sql, (err, rows) => {
+            console.log(err);
             console.table(rows);
             initializeProgram();
         })
@@ -35,10 +41,10 @@ function allEmployees() {
 //gets all role information
 function allRoles() {
     const sql = `SELECT roles.*, departments.name
-                AS department_id
+                AS department
                 FROM roles
                 LEFT JOIN departments
-                ON roles.department_id = departments.id`;
+                ON roles.department = departments.id`;
     db.query(sql, (err, rows) => {
         console.table(rows);
         initializeProgram();
@@ -56,6 +62,11 @@ function allDepartments() {
 
 //adds a new employee to the database NOTE: going to need to add validation, and the employees role/department
 function addEmployee() {
+    const sql2 = `SELECT id, title FROM roles`;
+    db.query(sql2, (err, rows) => {
+        let roles = rows.map(function(row) {
+            return {name: row.title, value: row.id}
+        })
     inquirer
         .prompt([
             {
@@ -67,22 +78,29 @@ function addEmployee() {
                 type: 'text',
                 name: 'lastName',
                 message: 'Please enter employees last name'
+            },
+            {
+                type: 'list',
+                name: 'selectRole',
+                message: 'What is this employees role?',
+                choices: roles
             }
         ])
-        .then(({firstName, lastName}) => {
-            const sql = `INSERT INTO employees (first_name, last_name)
-                         VALUES (?,?)`;
-            const params = [firstName, lastName];
+        .then(({firstName, lastName, selectRole}) => {
+            const sql = `INSERT INTO employees (first_name, last_name, role)
+                         VALUES (?,?,?)`;
+            const params = [firstName, lastName, selectRole];
             db.query(sql, params, (err, result) => {
                 console.log('Employee added!');
                 initializeProgram();
             })
         })
-    
+    })
 }
 
+//adds a new role to the database
 function addRole() { //add validation to the new role question, and get it asking what department it belongs too
-    inquirer //also needs a salary added to the role
+    inquirer //also needs a department.
         .prompt([
             {
                 type: 'text',
@@ -106,6 +124,7 @@ function addRole() { //add validation to the new role question, and get it askin
         })
 }
 
+//adds a new department to the database
 function addDepartment() {
     inquirer
         .prompt([
@@ -126,5 +145,11 @@ function addDepartment() {
         })
 }
 
+//updates the employee role
+function updateEmployeeRole() {
+    console.log('HELLO WORLD');
+}
+
+//getQuestionLists();
 module.exports = printResults;
 
