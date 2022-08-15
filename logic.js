@@ -100,7 +100,12 @@ function addEmployee() {
 
 //adds a new role to the database
 function addRole() { //add validation to the new role question, and get it asking what department it belongs too
-    inquirer //also needs a department.
+    const sql2 = `SELECT id, name FROM departments`;
+    db.query(sql2, (err, rows) => {
+        let departments = rows.map(function(row) {
+            return {name: row.name, value: row.id}
+        })
+    inquirer
         .prompt([
             {
                 type: 'text',
@@ -111,17 +116,24 @@ function addRole() { //add validation to the new role question, and get it askin
                 type: 'number',
                 name: 'salary',
                 message: 'Please enter this roles salary (only answers that are all numbers are acceptable)'
+            },
+            {
+                type: 'list',
+                name: 'departmentSelect',
+                message: 'Please select what department this role belongs to',
+                choices: departments
             }
         ])
-        .then(({roleName, salary}) => {
-            const sql = `INSERT INTO roles (title, salary)
-                         VALUES (?,?)`;
-            const params = [roleName, salary];
+        .then(({roleName, salary, departmentSelect}) => {
+            const sql = `INSERT INTO roles (title, salary, department)
+                         VALUES (?,?,?)`;
+            const params = [roleName, salary, departmentSelect];
             db.query(sql, params, (err, result) => {
                 console.log('Role added!');
                 initializeProgram();
             })
         })
+    })
 }
 
 //adds a new department to the database
@@ -147,7 +159,7 @@ function addDepartment() {
 
 //updates the employee role
 function updateEmployeeRole() {
-    console.log('HELLO WORLD');
+    
 }
 
 //getQuestionLists();
