@@ -2,6 +2,7 @@ const inquirer = require('inquirer');
 const fs = require('fs');
 const db = require('./db/connection');
 const cTable = require('console.table');
+const { rawListeners } = require('process');
 
 //calls the functions that print the options results
 function printResults(directory) {
@@ -36,7 +37,7 @@ function allEmployees() {
             console.table(rows);
             initializeProgram();
         })
-}
+};
 
 //gets all role information
 function allRoles() {
@@ -49,7 +50,7 @@ function allRoles() {
         console.table(rows);
         initializeProgram();
     })
-}
+};
 
 //gets all departments
 function allDepartments() {
@@ -58,7 +59,7 @@ function allDepartments() {
         console.table(rows);
         initializeProgram();
     })
-}
+};
 
 //adds a new employee to the database NOTE: going to need to add validation, and the employees role/department
 function addEmployee() {
@@ -96,7 +97,7 @@ function addEmployee() {
             })
         })
     })
-}
+};
 
 //adds a new role to the database
 function addRole() { //add validation to the new role question, and get it asking what department it belongs too
@@ -134,7 +135,7 @@ function addRole() { //add validation to the new role question, and get it askin
             })
         })
     })
-}
+};
 
 //adds a new department to the database
 function addDepartment() {
@@ -155,13 +156,56 @@ function addDepartment() {
                 initializeProgram();
             })
         })
-}
+};
 
 //updates the employee role
 function updateEmployeeRole() {
-    
-}
+    const sql = `SELECT employees.*, roles.id
+                 AS role,
+                 roles.title AS role_title
+                 FROM employees
+                 LEFT JOIN roles ON employees.role = roles.id`;
 
-//getQuestionLists();
+    db.query(sql, (err, rows) => {
+        //console.log(err);
+        //console.table(rows);
+        let employeeList = rows.map(function(row) {
+            return {name: row.first_name + ' ' + row.last_name, value: row.id}
+        })
+        //console.log(employeeList);
+        let rawRoles = [];
+        rawRoles = rows.map(function(row) {
+            return {name: row.role_title, value: row.role}
+        })
+        //console.table(rawRoles);
+    inquirer
+        .prompt([
+            {
+                type: 'list',
+                name: 'selectEmployee',
+                message: 'Select the employee rose role you wish to update',
+                choices: employeeList
+            },
+            {
+                type: 'list',
+                name: 'selectNewRole',
+                message: 'Select a new role for the employee',
+                choices: rawRoles
+            }
+        ])
+        .then(({selectEmployee, selectNewRole}) => {
+            console.log('SUCCESS');
+            const sql = `UPDATE employees SET role = ? WHERE id = ?`;
+            const params = [selectNewRole, selectEmployee];
+            db.query(sql, params, (err, result) => {
+                console.log(err);
+                console.table(result);
+                initializeProgram();
+            })
+        })
+
+
+    })
+};
+
 module.exports = printResults;
-
