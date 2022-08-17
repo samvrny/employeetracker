@@ -21,8 +21,3 @@ initializeProgram = function() {
 }
 
 initializeProgram();
-
-
-
-//NOTE: For demo video, add a shipping department and add the roles of warehouse laborer, and delivery driver.
-//npm dotenv

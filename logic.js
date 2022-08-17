@@ -23,10 +23,11 @@ function printResults(directory) {
     }
 };
 
-//THE MANAGER ID SHOULD REFERENCE THE ROLE ID? PERHAPS?
 //gets all employee information
 function allEmployees() {
-    const sql = `SELECT employees.*,
+    const sql = `SELECT employees.id AS id,
+                 employees.first_name AS first_name,
+                 employees.last_name AS last_name,
                  roles.title AS role,
                  roles.salary AS salary,
                  departments.name AS department,
@@ -64,7 +65,7 @@ function allDepartments() {
     })
 };
 
-//adds a new employee to the database NOTE: going to need to add validation, and the employees role/department
+//adds a new employee to the database
 function addEmployee() {
     const sql2 = `SELECT id, title FROM roles`;
     db.query(sql2, (err, rows) => {
@@ -82,22 +83,36 @@ function addEmployee() {
                 return true;
             }
         })
-        //console.table(managers);
         let managersList = managers.map(function(manager) {
             return {name: manager.first_name + ' ' + manager.last_name, value: manager.id}
         })
-        //console.table(managersList);
     inquirer
         .prompt([
             {
                 type: 'text',
                 name: 'firstName',
-                message: 'Please enter employees first name'
+                message: 'Please enter employees first name',
+                validate: input => {
+                    if(input) {
+                        return true;
+                    } else {
+                        console.log('You must enter the employees first name!');
+                        return false;
+                    }
+                }
             },
             {
                 type: 'text',
                 name: 'lastName',
-                message: 'Please enter employees last name'
+                message: 'Please enter employees last name',
+                validate: input => {
+                    if(input) {
+                        return true;
+                    } else {
+                        console.log('You must enter the employees last name!');
+                        return false;
+                    }
+                }
             },
             {
                 type: 'list',
@@ -126,7 +141,7 @@ function addEmployee() {
 };
 
 //adds a new role to the database
-function addRole() { //add validation to the new role question, and get it asking what department it belongs too
+function addRole() { 
     const sql2 = `SELECT id, name FROM departments`;
     db.query(sql2, (err, rows) => {
         let departments = rows.map(function(row) {
@@ -137,12 +152,21 @@ function addRole() { //add validation to the new role question, and get it askin
             {
                 type: 'text',
                 name: 'roleName',
-                message: 'What is the name of the new role?'
+                message: 'What is the name of the new role?',
+                validate: input => {
+                    if(input) {
+                        return true;
+                    } else {
+                        console.log('You must enter the name of the new role!');
+                        return false;
+                    }
+                }
             },
             {
-                type: 'number',
+                type: 'list',
                 name: 'salary',
-                message: 'Please enter this roles salary (only answers that are all numbers are acceptable)'
+                message: 'Please choose a salary for this role',
+                choices: [35000, 40000, 45000, 50000, 55000, 60000, 65000, 70000, 75000, 80000, 85000, 90000, 95000, 100000, 110000, 125000, 150000, 200000, 250000]
             },
             {
                 type: 'list',
@@ -184,7 +208,7 @@ function addDepartment() {
         })
 };
 
-//updates the employee role
+//updates a selected employees role
 function updateEmployeeRole() {
     const sql = `SELECT employees.*, roles.id
                  AS role,
