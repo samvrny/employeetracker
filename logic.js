@@ -23,15 +23,18 @@ function printResults(directory) {
     }
 };
 
+//THE MANAGER ID SHOULD REFERENCE THE ROLE ID? PERHAPS?
 //gets all employee information
 function allEmployees() {
     const sql = `SELECT employees.*,
                  roles.title AS role,
                  roles.salary AS salary,
-                 departments.name AS department
+                 departments.name AS department,
+                 CONCAT(manager.first_name, ' ', manager.last_name) AS manager
                  FROM employees
                  LEFT JOIN roles ON employees.role = roles.id
-                 LEFT JOIN departments ON roles.department = departments.id`;
+                 LEFT JOIN departments ON roles.department = departments.id
+                 LEFT JOIN employees manager ON employees.manager_id = manager.id`;
         db.query(sql, (err, rows) => {
             console.log(err);
             console.table(rows);
@@ -68,6 +71,18 @@ function addEmployee() {
         let roles = rows.map(function(row) {
             return {name: row.title, value: row.id}
         })
+    const sql2 = `SELECT * FROM employees`;
+    db.query(sql2, (err, rows) => {
+        let managers = rows.filter(function(row) {
+            if(row.manager_id === null) {
+                return true;//{name: row.first_name + ' ' + row.last_name, value: row.id}
+            }
+        })
+        console.table(managers);
+        let managersList = managers.map(function(manager) {
+            return {name: manager.first_name + ' ' + manager.last_name, value: manager.id}
+        })
+        console.table(managersList);
     inquirer
         .prompt([
             {
@@ -85,17 +100,24 @@ function addEmployee() {
                 name: 'selectRole',
                 message: 'What is this employees role?',
                 choices: roles
+            },
+            {
+                type: 'list',
+                name: 'selectManager',
+                message: 'Who is this employees manager?',
+                choices: managersList
             }
         ])
-        .then(({firstName, lastName, selectRole}) => {
-            const sql = `INSERT INTO employees (first_name, last_name, role)
-                         VALUES (?,?,?)`;
-            const params = [firstName, lastName, selectRole];
+        .then(({firstName, lastName, selectRole, selectManager}) => {
+            const sql = `INSERT INTO employees (first_name, last_name, role, manager_id)
+                         VALUES (?,?,?,?)`;
+            const params = [firstName, lastName, selectRole, selectManager];
             db.query(sql, params, (err, result) => {
                 console.log('Employee added!');
                 initializeProgram();
             })
         })
+    })    
     })
 };
 
@@ -167,17 +189,16 @@ function updateEmployeeRole() {
                  LEFT JOIN roles ON employees.role = roles.id`;
 
     db.query(sql, (err, rows) => {
-        //console.log(err);
-        //console.table(rows);
         let employeeList = rows.map(function(row) {
             return {name: row.first_name + ' ' + row.last_name, value: row.id}
         })
-        //console.log(employeeList);
-        let rawRoles = [];
-        rawRoles = rows.map(function(row) {
-            return {name: row.role_title, value: row.role}
-        })
-        //console.table(rawRoles);
+
+    const sql2 = `SELECT id, title FROM roles`;
+    db.query(sql2, (err, rows) => {
+        let roles = rows.map(function(row) {
+            return {name: row.title, value: row.id}
+        })   
+
     inquirer
         .prompt([
             {
@@ -190,22 +211,28 @@ function updateEmployeeRole() {
                 type: 'list',
                 name: 'selectNewRole',
                 message: 'Select a new role for the employee',
-                choices: rawRoles
+                choices: roles
             }
         ])
         .then(({selectEmployee, selectNewRole}) => {
-            console.log('SUCCESS');
             const sql = `UPDATE employees SET role = ? WHERE id = ?`;
             const params = [selectNewRole, selectEmployee];
             db.query(sql, params, (err, result) => {
-                console.log(err);
-                console.table(result);
+                console.log('Employee Updated!');
                 initializeProgram();
             })
         })
-
-
+    })
     })
 };
 
 module.exports = printResults;
+
+
+// let rawRoles = [];
+//         rawRoles = rows.map(function(row) {
+//             if(!rawRoles.includes(row)) {
+//             return {name: row.role_title, value: row.role}
+//             }
+//         })
+//         console.table(rawRoles);
