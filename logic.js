@@ -71,18 +71,22 @@ function addEmployee() {
         let roles = rows.map(function(row) {
             return {name: row.title, value: row.id}
         })
-    const sql2 = `SELECT * FROM employees`;
+    const sql2 = `SELECT employees.*, departments.name AS department
+                  FROM employees
+                  LEFT JOIN roles ON employees.role = roles.id
+                  LEFT JOIN departments ON roles.department = departments.id
+                  `;
     db.query(sql2, (err, rows) => {
         let managers = rows.filter(function(row) {
-            if(row.manager_id === null) {
-                return true;//{name: row.first_name + ' ' + row.last_name, value: row.id}
+            if(row.department === 'Managers') {
+                return true;
             }
         })
-        console.table(managers);
+        //console.table(managers);
         let managersList = managers.map(function(manager) {
             return {name: manager.first_name + ' ' + manager.last_name, value: manager.id}
         })
-        console.table(managersList);
+        //console.table(managersList);
     inquirer
         .prompt([
             {
@@ -227,12 +231,3 @@ function updateEmployeeRole() {
 };
 
 module.exports = printResults;
-
-
-// let rawRoles = [];
-//         rawRoles = rows.map(function(row) {
-//             if(!rawRoles.includes(row)) {
-//             return {name: row.role_title, value: row.role}
-//             }
-//         })
-//         console.table(rawRoles);

@@ -1,48 +1,47 @@
 INSERT INTO departments (name)
 VALUES
+    ('Managers'),
     ('Sales'),
-    ('Accounting'),
     ('Customer Service'),
     ('Software Development'),
     ('Marketing');
 
 INSERT INTO roles (title, salary, department)
 VALUES
-    ('Sales Lead', 75000, 1),
-    ('Salesperson', 65000, 1),
-    ('Secretary', 40000, 1),
-    ('Accountant', 75000, 2),
-    ('Customer Service Manager', 60000, 3),
-    ('Operator', 40000, 3),
-    ('Quality Assurance Rep', 40000, 3),
-    ('Customer Service Rep', 40000, 3),
+    ('Manager', 120000, 1),
+    ('Vice Manager', 100000, 1),
+    ('Associate Manager', 85000, 1),
+    ('Salesperson', 85000, 2),
+    ('Secretary', 55000, 2),
+    ('Quality Assurance Rep', 65000, 3),
+    ('Customer Service Rep', 65000, 3),
     ('Lead Developer', 175000, 4),
     ('Senior Developer', 125000, 4),
     ('Entry Developer', 60000, 4),
-    ('Marketing Manager', 75000, 5),
-    ('Graphic Designer', 55000, 5),
-    ('Marketing Representative', 45000, 5),
+    ('Graphic Designer', 75000, 5),
+    ('Marketing Representative', 65000, 5),
     ('Data Analyst', 75000, 5);
 
 INSERT INTO employees (first_name, last_name, role, manager_id)
 VALUES 
-    ('Sissy', 'Coalpits', 1, NULL),
-    ('Antoinette', 'Capet', 2, 1),
-    ('Samuel', 'Delany', 3, 1),
-    ('Sharon', 'Marsh', 4, 1),
-    ('Alex', 'Mason', 5, NULL), 
-    ('Randy', 'Randerson', 6, 5), 
-    ('Jim', 'Milton', 7, 5), 
-    ('Deandra', 'Reynolds', 8, 5), 
-    ('Loba', 'Andrade', 9, NULL), 
-    ('Arthur', 'Morgan', 10, 9),
-    ('John', 'Price', 11, 9),
-    ('Lois', 'Griffin', 12, NULL),
-    ('Cyril', 'Figgus', 13, 12),
-    ('Leslie', 'Knope', 14, 12),
-    ('Nandor', 'Relentless', 15, 12),
-    ('Sadie', 'Adler', 6, 5),
-    ('Marge', 'Simpson', 2, 1);
+    ('Sharon', 'Marsh', 1, 1),
+    ('Alex', 'Mason', 2, 1), 
+    ('Randy', 'Randerson', 3, 2), 
+    ('Ron', 'Swanson', 3, 3),
+    ('Jim', 'Milton', 4, 1), 
+    ('Deandra', 'Reynolds', 5, 4), 
+    ('Loba', 'Andrade', 6, 2), 
+    ('Arthur', 'Morgan', 7, 2),
+    ('John', 'Price', 8, 1),
+    ('Lois', 'Griffin', 9, 1),
+    ('Cyril', 'Figgus', 10, 3),
+    ('Leslie', 'Knope', 11, 2),
+    ('Nandor', 'Relentless', 12, 3),
+    ('Sadie', 'Adler', 13, 2),
+    ('Marge', 'Simpson', 4, 1),
+    ('Eric', 'Cartman', 4, 1),
+    ('Kyle', 'Broflavski', 7, 4),
+    ('Matthew', 'Mara', 12, 3);
 
 
     
