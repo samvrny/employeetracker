@@ -12,7 +12,7 @@ initializeProgram = function() {
             {
                 type: 'list',
                 name: 'directory',
-                message: 'Welcome to Acme Inc. Please select an option from the menu below',
+                message: 'Welcome to Acme Inc. Please select an option from the menu below (Use arrow keys)',
                 choices: ['View All Employees', 'Add Employee', 'Update Employee Role', 'View All Roles', 'Add Role', 'View All Departments', 'Add Department']
 
             }
