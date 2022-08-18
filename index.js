@@ -4,6 +4,8 @@ const db = require('./db/connection');
 const cTable = require('console.table');
 let printResults = require('./logic');
 
+//dont forget to enter your mysql password in db/connection.js before invoking the application!
+
 initializeProgram = function() {
     inquirer    
         .prompt([
